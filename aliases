@@ -1,0 +1,45 @@
+ 
+
+
+alias get-branch="git rev-parse --abbrev-ref HEAD"
+git_current_branch="git rev-parse --abbrev-ref HEAD"
+#Shortcut to push to the current branch.
+function current_branch() {
+  git_current_branch
+}
+alias publish="git push -u origin $(git_current_branch)"
+
+# Git
+alias gs="git status"
+alias ga="git add -A"
+alias gb="git branch"
+alias gc="git commit -m"
+alias lg="git log"
+alias wip="git add -A  && git commit -m 'wip'"
+alias nah="git reset --hard && git clean -df"
+
+alias push="git push -u origin $(git_current_branch)"
+alias pull="git pull -u origin $(git_current_branch)"
+# git push
+#push() {
+ # git push origin "${1-git_current_branch"
+#}
+# git pull
+#pull() {
+ # git pull origin "$@"
+#}
+
+alias c="clear"
+
+
+
+# fnm
+export PATH="/Users/patonadigital/Library/Application Support/fnm:$PATH"
+eval "`fnm env`"
+
+# go 
+
+export GOPATH=$HOME/go
+
+
+
