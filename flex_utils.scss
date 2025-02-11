@@ -1,0 +1,136 @@
+@use "sass:map";
+
+// Ensure $utilities is defined as an empty map if not already set
+$utilities: () !default;
+
+// Merge your custom utilities into the $utilities map
+$utilities: map.deep-merge(
+  $utilities,
+  ( 
+    "display": (
+      print: true,
+      property: display,
+      class: d, // Use 'd' as the short class prefix for display
+      values: (
+        inline: inline,
+        "inline-block": inline-block,
+        block: block,
+        flex: flex,
+        "inline-flex": inline-flex,
+        none: none
+      )
+    ),
+    // scss-docs-start utils-flex
+    "flex": (
+      responsive: true,
+      property: flex,
+      values: (fill: 1 1 auto)
+    ),
+    "flex-direction": (
+      responsive: true,
+      property: flex-direction,
+      class: flex,
+      values: row column row-reverse column-reverse
+    ),
+    "flex-grow": (
+      responsive: true,
+      property: flex-grow,
+      class: flex,
+      values: (
+        grow-0: 0,
+        grow-1: 1,
+      )
+    ),
+    "flex-shrink": (
+      responsive: true,
+      property: flex-shrink,
+      class: flex,
+      values: (
+        shrink-0: 0,
+        shrink-1: 1,
+      )
+    ),
+    "flex-wrap": (
+      responsive: true,
+      property: flex-wrap,
+      class: flex,
+      values: wrap nowrap wrap-reverse
+    ),
+    "justify-content": (
+      responsive: true,
+      property: justify-content,
+      values: (
+        start: flex-start,
+        end: flex-end,
+        center: center,
+        between: space-between,
+        around: space-around,
+        evenly: space-evenly,
+      )
+    ),
+    "align-items": (
+      responsive: true,
+      property: align-items,
+      values: (
+        start: flex-start,
+        end: flex-end,
+        center: center,
+        baseline: baseline,
+        stretch: stretch,
+      )
+    ),
+    "align-content": (
+      responsive: true,
+      property: align-content,
+      values: (
+        start: flex-start,
+        end: flex-end,
+        center: center,
+        between: space-between,
+        around: space-around,
+        stretch: stretch,
+      )
+    ),
+    "align-self": (
+      responsive: true,
+      property: align-self,
+      values: (
+        auto: auto,
+        start: flex-start,
+        end: flex-end,
+        center: center,
+        baseline: baseline,
+        stretch: stretch,
+      )
+    ),
+    "order": (
+      responsive: true,
+      property: order,
+      values: (
+        first: -1,
+        0: 0,
+        1: 1,
+        2: 2,
+        3: 3,
+        4: 4,
+        5: 5,
+        last: 6,
+      ),
+    ),
+  )
+);
+
+// Generate CSS classes dynamically
+@each $name, $config in $utilities {
+  @if map.has-key($config, property) and map.has-key($config, values) {
+    $property: map.get($config, property);
+    $class-prefix: if(map.has-key($config, class), map.get($config, class), $name);
+    $values: map.get($config, values);
+
+    @each $class, $value in $values {
+      .#{$class-prefix}-#{$class} {
+        #{$property}: #{$value};
+      }
+    }
+  }
+}
