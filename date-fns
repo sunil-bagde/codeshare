@@ -1,0 +1,10 @@
+// Import format from date-fns
+import { format } from 'date-fns';
+
+function formatDate(date) {
+    return format(date, 'd-M-yyyy HH:mm:ss');
+}
+
+// Example usage:
+const date = new Date();  // Current date and time
+console.log(formatDate(date));
