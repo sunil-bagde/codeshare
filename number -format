@@ -1,0 +1,17 @@
+function formatPhoneNumber(number) {
+    // Remove all non-numeric characters
+    const cleaned = number.replace(/\D/g, '');
+    
+    // Format the phone number
+    const match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
+    
+    if (match) {
+        return `(${match[1]}) ${match[2]}-${match[3]}`;
+    }
+    
+    return null;  // Return null if the number is invalid
+}
+
+// Example usage:
+const phoneNumber = "5555555555";
+console.log(formatPhoneNumber(phoneNumber));  // Output: (555) 555-5555
