@@ -26,3 +26,21 @@ alias pull="git pull origin \$(get_branch)"
 
 # Clear command
 alias c="clear"
+
+
+# Checkout Aliases
+alias co="git checkout"  # Shortcut for `git checkout`
+alias cob="checkout_branch"  # Create and switch to a new branch
+
+checkout_branch() {
+  if [ -z "$1" ]; then
+    echo "Error: Branch name is required."
+  else
+    git checkout -b "$1"
+  fi
+}
+
+alias cof="git checkout --"  # Checkout a file (undo changes in a file)
+alias com="git checkout master"  # Checkout the master branch
+alias co-main="git checkout main"  # Checkout the main branch
+
