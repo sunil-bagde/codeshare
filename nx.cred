@@ -1,0 +1,6 @@
+# Generate UI libraries
+nx g @nx/react:library los-ui-transunion --directory=libs/los/ui --importPath=@los/ui-transunion --style=css
+nx g @nx/react:library los-ui-credco --directory=libs/los/ui --importPath=@los/ui-credco --style=css
+
+# Generate Feature library
+nx g @nx/react:library los-feature-credit-reports --directory=libs/los/feature --importPath=@los/feature-credit-reports --style=css
