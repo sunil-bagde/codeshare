@@ -6,22 +6,22 @@ const About = () => <h2>About Page</h2>;
 const Contact = () => <h2>Contact Page</h2>;
 const NotFound = () => <h2>Page Not Found</h2>;
 
-// Component mapping based on route param
-const components = {
+// Component mapping
+const components: Record<string, React.FC> = {
   home: Home,
   about: About,
   contact: Contact,
 };
 
-// Dynamic component loader
-const DynamicComponent = () => {
-  const { page } = useParams();
-  const Component = components[page] || NotFound; // Fallback to NotFound if not found
+// Dynamic Component Loader
+const DynamicComponent: React.FC = () => {
+  const { page } = useParams<{ page?: string }>(); // Ensure page is possibly undefined
+  const Component = page && components[page] ? components[page] : NotFound;
   return <Component />;
 };
 
-// App Component with Routes
-const App = () => {
+// Main App Component
+const App: React.FC = () => {
   return (
     <Router>
       <Routes>
