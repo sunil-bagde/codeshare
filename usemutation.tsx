@@ -1,61 +1,55 @@
-import { useMutation, UseMutationOptions } from "@tanstack/react-query";
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 
 // Define API response type
-interface CreditReportResponse {
-  success: boolean;
-  message?: string;
+interface PostResponse {
+  id: number;
+  title: string;
+  body: string;
+  userId: number;
 }
 
-// Define API function with proper typing
-export const fetchSaveNextCreditReport = async (
-  loanOriginationId: string,
-  data: any
-): Promise<CreditReportResponse> => {
-  const response: AxiosResponse<CreditReportResponse> = await axios.post(
-    `${process.env.NX_PUBLIC_LOS_SERVICES_BASE_URL}/v1/underwriting-loan-summaries/${loanOriginationId}/saveAndNext`,
-    data
-  );
-  return response.data; // Ensure the function returns only the response data
-};
-
-// **Use React Query's useMutation hook properly**
-export const useSaveNextCreditReport = () => {
-  return useMutation<CreditReportResponse, Error, { loanOriginationId: string; payload: any }>(
-    ({ loanOriginationId, payload }) => fetchSaveNextCreditReport(loanOriginationId, payload)
-  );
+// Function to make POST request using Axios
+export const createPost = async (data: { title: string; body: string; userId: number }): Promise<PostResponse> => {
+  const response = await axios.post<PostResponse>("https://jsonplaceholder.typicode.com/posts", data);
+  return response.data; // Return only the data, not the entire response
 };
 
 
+import { useMutation } from "@tanstack/react-query";
+import { createPost } from "./api"; // Import API function
+
+// Custom hook to handle API mutation
+export const useCreatePost = () => {
+  return useMutation<
+    PostResponse, // Response type
+    Error, // Error type
+    { title: string; body: string; userId: number } // Variables type
+  >(createPost);
+};
 import { useState } from "react";
-import { useSaveNextCreditReport } from "./api";
+import { useCreatePost } from "./mutation"; // Import useMutation hook
 
-const CreditReportForm: React.FC = () => {
-  const [loanId, setLoanId] = useState("");
-  const [formData, setFormData] = useState({ key: "value" });
-
-  const mutation = useSaveNextCreditReport();
+const CreatePostForm: React.FC = () => {
+  const [title, setTitle] = useState("");
+  const [body, setBody] = useState("");
+  const mutation = useCreatePost();
 
   const handleSubmit = () => {
-    mutation.mutate({ loanOriginationId: loanId, payload: formData });
+    mutation.mutate({ title, body, userId: 1 });
   };
 
   return (
     <div>
-      <h2>Save & Next Credit Report</h2>
-      <input
-        type="text"
-        placeholder="Loan Origination ID"
-        value={loanId}
-        onChange={(e) => setLoanId(e.target.value)}
-      />
+      <h2>Create New Post</h2>
+      <input type="text" placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} />
+      <textarea placeholder="Body" value={body} onChange={(e) => setBody(e.target.value)} />
       <button onClick={handleSubmit} disabled={mutation.isLoading}>
-        {mutation.isLoading ? "Saving..." : "Save & Next"}
+        {mutation.isLoading ? "Submitting..." : "Submit"}
       </button>
       {mutation.isError && <p style={{ color: "red" }}>Error: {mutation.error?.message}</p>}
-      {mutation.isSuccess && <p style={{ color: "green" }}>Success!</p>}
+      {mutation.isSuccess && <p style={{ color: "green" }}>Success! Post ID: {mutation.data?.id}</p>}
     </div>
   );
 };
 
-export default CreditReportForm;
+export default CreatePostForm;
