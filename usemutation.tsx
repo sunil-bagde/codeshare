@@ -62,3 +62,42 @@ const App: React.FC = () => {
 };
 
 export default App;
+
+
+import { useMutation } from "@tanstack/react-query";
+import { fetchSaveNextCreditReport } from "./api"; // Import your API function
+import { useState } from "react";
+
+const CreditReportForm: React.FC = () => {
+  const [loanId, setLoanId] = useState("");
+  const [formData, setFormData] = useState({ key: "value" });
+
+  // Using React Query mutation
+  const mutation = useMutation((data: { loanOriginationId: string; payload: any }) =>
+    fetchSaveNextCreditReport(data.loanOriginationId, data.payload)
+  );
+
+  const handleSubmit = () => {
+    mutation.mutate({ loanOriginationId: loanId, payload: formData });
+  };
+
+  return (
+    <div>
+      <h2>Save & Next Credit Report</h2>
+      <input
+        type="text"
+        placeholder="Loan Origination ID"
+        value={loanId}
+        onChange={(e) => setLoanId(e.target.value)}
+      />
+      <button onClick={handleSubmit} disabled={mutation.isLoading}>
+        {mutation.isLoading ? "Saving..." : "Save & Next"}
+      </button>
+      {mutation.isError && <p style={{ color: "red" }}>Error: {mutation.error?.message}</p>}
+      {mutation.isSuccess && <p style={{ color: "green" }}>Success!</p>}
+    </div>
+  );
+};
+
+export default CreditReportForm;
+
